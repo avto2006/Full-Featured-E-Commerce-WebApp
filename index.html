@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ka" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraTech 2026 - Next-Gen Tech Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            violet: '#8b5cf6',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b'
+                        },
+                        darkbg: '#080c14',
+                        darkcard: '#0f172a',
+                        darkborder: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Segoe UI', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow-brand': '0 0 25px -5px rgba(99, 102, 241, 0.4)',
+                        'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.4)',
+                        'glow-rose': '0 0 25px -5px rgba(244, 63, 94, 0.4)',
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: #080c14;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Page View Transitions */
+        .page-view {
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page-view.page-enter {
+            opacity: 0;
+            transform: translateY(12px) scale(0.99);
+        }
+        .page-view.page-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080c14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Animated Text Gradient */
+        .animated-gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #8b5cf6 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGradient 5s linear infinite;
+        }
+        @keyframes textGradient {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+
+        /* Pulse glow for AI Chatbot */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.8); }
+        }
+        .ai-pulse {
+            animation: pulseGlow 3s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-5 flex flex-col gap-3 z-[9999] pointer-events-none max-w-sm w-full"></div>
+
+    <!-- Announcement Bar -->
+    <div class="bg-gradient-to-r from-brand-700 via-accent-violet to-accent-cyan text-white text-xs py-2 px-6 flex justify-between items-center font-medium tracking-wide">
+        <div class="hidden sm:flex items-center gap-2">
+            <span class="bg-white/20 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">2026 EDITION</span>
+            <span>⚡ ნეირო-ტექნოლოგიების გრანდიოზული ფასდაკლება AuraTech-ში!</span>
+        </div>
+        <div class="mx-auto sm:mx-0 flex items-center gap-3">
+            <span>პრომო კოდი: <strong class="bg-white/20 px-2 py-0.5 rounded font-mono font-bold">AURA20</strong> (-20%)</span>
+        </div>
+        <div class="hidden md:flex items-center gap-4 text-xs opacity-90">
+            <span class="cursor-pointer hover:underline" onclick="app.showToast('მაღაზიის ფილიალები: თბილისი, ბათუმი, ქუთაისი', 'info')"><i class="fa-solid fa-location-dot mr-1"></i> ფილიალები</span>
+            <span class="cursor-pointer hover:underline"><i class="fa-solid fa-headset mr-1"></i> მხარდაჭერა 24/7</span>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-800/80 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-8">
+                    <a href="#" onclick="app.navigateTo('home'); return false;" class="flex items-center gap-3 group">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-accent-violet to-accent-cyan flex items-center justify-center text-white shadow-glow-brand group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-microchip text-xl"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-2xl font-black tracking-tight animated-gradient-text">AURA<span class="text-white">TECH</span></span>
+                            <span class="text-[9px] text-gray-400 font-mono tracking-widest -mt-1 uppercase">Next-Gen Store 2026</span>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links -->
+                    <nav class="hidden lg:flex items-center gap-1 text-sm font-semibold text-gray-300">
+                        <button onclick="app.navigateTo('home')" id="nav-home" class="px-3.5 py-2 rounded-xl text-white bg-white/10 transition-all">
+                            <i class="fa-solid fa-house mr-1.5 text-xs"></i>მთავარი
+                        </button>
+                        <button onclick="app.navigateTo('shop')" id="nav-shop" class="px-3.5 py-2 rounded-xl hover:bg-white/5 hover:text-white transition-all text-gray-400">
+                            <i class="fa-solid fa-store mr-1.5 text-xs"></i>პროდუქტები
+                        </button>
+                        <button onclick="app.navigateTo('deals')" id="nav-deals" class="px-3.5 py-2 rounded-xl hover:bg-white/5 hover:text-white transition-all text-gray-400">
+                            <i class="fa-solid fa-bolt text-amber-400 mr-1.5 text-xs"></i>ფასდაკლებები
+                        </button>
+                        <button onclick="app.navigateTo('about')" id="nav-about" class="px-3.5 py-2 rounded-xl hover:bg-white/5 hover:text-white transition-all text-gray-400">
+                            <i class="fa-solid fa-circle-info mr-1.5 text-xs"></i>ჩვენ შესახებ
+                        </button>
+                        <button onclick="app.navigateTo('contact')" id="nav-contact" class="px-3.5 py-2 rounded-xl hover:bg-white/5 hover:text-white transition-all text-gray-400">
+                            <i class="fa-solid fa-envelope mr-1.5 text-xs"></i>კონტაქტი
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Global Live Search Input -->
+                <div class="flex-1 max-w-md relative hidden md:block">
+                    <div class="relative">
+                        <input type="text" id="global-search-input" oninput="app.handleGlobalSearch(this.value)" placeholder="მოძებნე AI ნოუთბუქები, VR სათვალეები, დრონები..." 
+                               class="w-full bg-slate-900/90 border border-slate-700/70 rounded-xl py-2.5 pl-10 pr-10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-gray-500 text-xs"></i>
+                        <button id="search-clear-btn" onclick="app.clearGlobalSearch()" class="hidden absolute right-3 top-2.5 text-gray-500 hover:text-white text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Instant Search Dropdown -->
+                    <div id="global-search-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-50 max-h-96 overflow-y-auto">
+                        <!-- Dynamic Results injected here -->
+                    </div>
+                </div>
+
+                <!-- Header Actions (Wishlist, Cart, Theme, Mobile) -->
+                <div class="flex items-center gap-3">
+                    
+                    <!-- Wishlist Button -->
+                    <button onclick="app.showWishlistModal()" class="relative p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 hover:border-slate-500 text-gray-300 hover:text-white transition-all">
+                        <i class="fa-solid fa-heart text-amber-400"></i>
+                        <span id="wishlist-badge" class="absolute -top-1.5 -right-1.5 bg-accent-rose text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                    </button>
+
+                    <!-- Cart Drawer Trigger -->
+                    <button onclick="app.toggleCartDrawer()" class="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-cyan text-white font-semibold hover:brightness-110 shadow-glow-brand transition-all">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span class="hidden sm:inline text-xs">კალათა</span>
+                        <span id="cart-badge" class="bg-white text-brand-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+                    </button>
+
+                    <!-- Mobile Navigation Trigger -->
+                    <button onclick="app.toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-bars text-base"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-800 bg-slate-950 px-4 py-4 space-y-2">
+            <button onclick="app.navigateTo('home')" class="w-full text-left px-4 py-2.5 rounded-xl bg-white/10 font-medium text-xs text-white">
+                <i class="fa-solid fa-house mr-3 text-brand-400"></i>მთავარი
+            </button>
+            <button onclick="app.navigateTo('shop')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-white/5 font-medium text-xs text-gray-300">
+                <i class="fa-solid fa-store mr-3 text-accent-cyan"></i>პროდუქტები
+            </button>
+            <button onclick="app.navigateTo('deals')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-white/5 font-medium text-xs text-gray-300">
+                <i class="fa-solid fa-bolt mr-3 text-amber-400"></i>ფასდაკლებები
+            </button>
+            <button onclick="app.navigateTo('about')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-white/5 font-medium text-xs text-gray-300">
+                <i class="fa-solid fa-circle-info mr-3 text-accent-violet"></i>ჩვენ შესახებ
+            </button>
+            <button onclick="app.navigateTo('contact')" class="w-full text-left px-4 py-2.5 rounded-xl hover:bg-white/5 font-medium text-xs text-gray-300">
+                <i class="fa-solid fa-envelope mr-3 text-accent-emerald"></i>კონტაქტი
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SINGLE PAGE APPLICATION VIEWS CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+
+        <!-- ================= PAGE 1: HOME ================= -->
+        <div id="view-home" class="page-view page-active space-y-16">
+            
+            <!-- HOME SECTION 1: Dynamic Hero Banner -->
+            <section class="relative rounded-3xl overflow-hidden border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-brand-900/40 p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl">
+                <div class="space-y-6 max-w-xl z-10 text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-accent-cyan animate-ping"></span>
+                        AURA ECOSYSTEM 2026 EDITION
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                        მომავლის <span class="animated-gradient-text">ინოვაცია & AI</span> შენს ხელებშია
+                    </h1>
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                        აღმოაჩინე კვანტური პროცესორები, ნეირო-ყურსასმენები, 8K AR სათვალეები და ავტონომიური სმარტ მოწყობილობები 2 წლიანი გარანტიით.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
+                        <button onclick="app.navigateTo('shop')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-accent-cyan text-white font-semibold shadow-glow-brand hover:scale-105 transition-all text-xs flex items-center gap-2">
+                            კატალოგის დათვალიერება <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="app.openAiChatWithQuery('მირჩიე 2026 წლის საუკეთესო პროდუქტები')" class="px-6 py-3.5 rounded-xl bg-slate-800/90 border border-slate-700 text-gray-200 font-semibold hover:border-brand-500 transition-all text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-accent-cyan"></i> AI რეკომენდაცია
+                        </button>
+                    </div>
+
+                    <!-- Live Floating Product Counter Badge -->
+                    <div class="pt-4 flex items-center justify-center md:justify-start gap-6 text-xs text-gray-400 border-t border-slate-800/80">
+                        <div>
+                            <span class="font-bold text-white font-mono text-base block">2,400+</span>
+                            <span>კმაყოფილი მომხმარებელი</span>
+                        </div>
+                        <div class="w-px h-8 bg-slate-800"></div>
+                        <div>
+                            <span class="font-bold text-white font-mono text-base block">100%</span>
+                            <span>ოფიციალური გარანტია</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Image Showcase -->
+                <div class="relative w-full md:w-1/2 flex justify-center items-center">
+                    <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-tr from-brand-600/30 via-accent-violet/20 to-accent-cyan/30 blur-3xl absolute"></div>
+                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80" alt="Cyber Hardware" 
+                         class="relative z-10 rounded-3xl border border-slate-700/80 shadow-2xl object-cover h-64 sm:h-80 w-full transform hover:scale-105 transition-transform duration-500">
+                </div>
+            </section>
+
+            <!-- HOME SECTION 2: Trending & Smart Categories Grid -->
+            <section class="space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-brand-500"></i> პოპულარული კატეგორიები
+                        </h2>
+                        <p class="text-xs text-gray-400">აირჩიე სასურველი მიმართულება</p>
+                    </div>
+                    <button onclick="app.navigateTo('shop')" class="text-xs text-brand-400 hover:underline font-semibold">ყველას ნახვა <i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div onclick="app.filterCategoryAndGo('Electronics')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-brand-500 hover:shadow-glow-brand cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-laptop"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">ნოუთბუქები</h4>
+                        <span class="text-[10px] text-gray-500">24 მოდელი</span>
+                    </div>
+
+                    <div onclick="app.filterCategoryAndGo('VR/AR Technology')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-accent-cyan hover:shadow-glow-cyan cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-accent-cyan/10 text-accent-cyan flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-vr-cardboard"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">VR/AR სათვალე</h4>
+                        <span class="text-[10px] text-gray-500">12 მოდელი</span>
+                    </div>
+
+                    <div onclick="app.filterCategoryAndGo('Wearables')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-accent-violet hover:shadow-glow-brand cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-accent-violet/10 text-accent-violet flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">სმარტ საათები</h4>
+                        <span class="text-[10px] text-gray-500">18 მოდელი</span>
+                    </div>
+
+                    <div onclick="app.filterCategoryAndGo('Gaming')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-accent-rose hover:shadow-glow-rose cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-accent-rose/10 text-accent-rose flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">Gaming & Drones</h4>
+                        <span class="text-[10px] text-gray-500">30 მოდელი</span>
+                    </div>
+
+                    <div onclick="app.filterCategoryAndGo('Audio')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-amber-400 cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-400/10 text-amber-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-headphones"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">აუდიო სისტემები</h4>
+                        <span class="text-[10px] text-gray-500">15 მოდელი</span>
+                    </div>
+
+                    <div onclick="app.filterCategoryAndGo('Smart Home')" class="glass-panel p-5 rounded-2xl border border-slate-800 text-center hover:border-accent-emerald cursor-pointer group transition-all">
+                        <div class="w-12 h-12 mx-auto rounded-2xl bg-accent-emerald/10 text-accent-emerald flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-house-signal"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-white">Smart Home</h4>
+                        <span class="text-[10px] text-gray-500">22 მოდელი</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOME SECTION 3: Featured Products Top Picks -->
+            <section class="space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-accent-rose"></i> რჩეული პროდუქტები
+                        </h2>
+                        <p class="text-xs text-gray-400">2026 წლის ყველაზე მოთხოვნადი ტექნიკა</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="app.renderFeaturedProducts('all')" id="feat-btn-all" class="px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-semibold">ყველა</button>
+                        <button onclick="app.renderFeaturedProducts('bestseller')" id="feat-btn-bestseller" class="px-3 py-1.5 rounded-xl bg-slate-800 text-gray-400 hover:text-white text-xs font-semibold">ბესტსელერი</button>
+                        <button onclick="app.renderFeaturedProducts('new')" id="feat-btn-new" class="px-3 py-1.5 rounded-xl bg-slate-800 text-gray-400 hover:text-white text-xs font-semibold">ახალი</button>
+                    </div>
+                </div>
+
+                <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Injected dynamic featured items -->
+                </div>
+            </section>
+
+            <!-- HOME SECTION 4: Product Spotlight Tech Specs -->
+            <section class="glass-panel rounded-3xl border border-slate-800 p-8 lg:p-12 relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-5">
+                        <span class="px-3 py-1 rounded-full bg-accent-violet/20 border border-accent-violet/40 text-accent-violet text-[10px] font-bold uppercase tracking-wider">
+                            SPOTLIGHT PRODUCT 2026
+                        </span>
+                        <h2 class="text-2xl sm:text-4xl font-black text-white">QuantumPad Studio Pro X</h2>
+                        <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                            რევოლუციური გრაფიკული ტაბლეტი AI-ასისტენტით, ჰოლოგრაფიული ეკრანის პროექციითა და უსადენო დატენვის ზედაპირით.
+                        </p>
+
+                        <!-- Specs Interactive Switcher -->
+                        <div class="space-y-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                            <div class="flex gap-2 border-b border-slate-800 pb-2">
+                                <button onclick="app.switchSpotlightTab('perf')" id="spottab-perf" class="text-xs font-bold text-brand-400 border-b-2 border-brand-500 pb-1">წარმადობა</button>
+                                <button onclick="app.switchSpotlightTab('display')" id="spottab-display" class="text-xs font-bold text-gray-500 hover:text-white pb-1">ეკრანი</button>
+                                <button onclick="app.switchSpotlightTab('battery')" id="spottab-battery" class="text-xs font-bold text-gray-500 hover:text-white pb-1">ელემენტი</button>
+                            </div>
+                            <div id="spotlight-tab-content" class="text-xs text-gray-300">
+                                • Quantum M5 AI Chipset (128 Tops NPU)<br>
+                                • 32GB LPDDR6 Memory<br>
+                                • Liquid Cooling System Gen 3
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 pt-2">
+                            <span class="text-2xl font-black font-mono text-white">3,199 ₾</span>
+                            <button onclick="app.addToCart('prod-1')" class="px-6 py-3 bg-gradient-to-r from-brand-600 to-accent-cyan text-white text-xs font-bold rounded-xl shadow-glow-brand hover:brightness-110 transition-all">
+                                კალათაში დამატება
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative flex justify-center">
+                        <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80" alt="Spotlight Product" class="rounded-2xl border border-slate-700/80 shadow-2xl object-cover h-80 w-full">
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOME SECTION 5: Trust Pillars, Reviews & Newsletter -->
+            <section class="space-y-12">
+                
+                <!-- Trust Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-lg"><i class="fa-solid fa-truck-fast"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">უფასო მიწოდება</h4>
+                            <p class="text-[10px] text-gray-400">100 ₾-ზე მეტ შენაძენზე</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-cyan/10 text-accent-cyan flex items-center justify-center text-lg"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">2 წლიანი გარანტია</h4>
+                            <p class="text-[10px] text-gray-400">ოფიციალური სერვისი</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-violet/10 text-accent-violet flex items-center justify-center text-lg"><i class="fa-solid fa-rotate"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">30 დღიანი დაბრუნება</h4>
+                            <p class="text-[10px] text-gray-400">უპრობლემო დაბრუნება</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-emerald/10 text-accent-emerald flex items-center justify-center text-lg"><i class="fa-solid fa-headset"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">24/7 AI მხარდაჭერა</h4>
+                            <p class="text-[10px] text-gray-400">მყისიერი პასუხები</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Testimonials -->
+                <div class="space-y-6">
+                    <h3 class="text-lg font-bold text-white text-center">რას ამბობენ ჩვენი მომხმარებლები</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-panel p-5 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-xs text-gray-300 italic">"AuraBook Pro X შევიძინე 3 დღის წინ. საოცარი სისწრაფე აქვს, AI ასისტენტი ძალიან მეხმარება პროგრამირებაში!"</p>
+                            <div class="flex items-center gap-3 pt-2">
+                                <div class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">გბ</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-white">გიორგი ბერიძე</h5>
+                                    <span class="text-[10px] text-gray-500">Senior Developer</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-5 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-xs text-gray-300 italic">"VR სათვალის მოწოდება მოხდა იმავე დღეს. ხარისხი არის უმაღლესი დონის, მიწოდების სერვისი - 10/10."</p>
+                            <div class="flex items-center gap-3 pt-2">
+                                <div class="w-8 h-8 rounded-full bg-accent-cyan flex items-center justify-center text-xs font-bold">ნკ</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-white">ნინო კაპანაძე</h5>
+                                    <span class="text-[10px] text-gray-500">3D Designer</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-5 rounded-2xl space-y-3">
+                            <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-xs text-gray-300 italic">"Nova AI ჩატბოტმა ზუსტად ის ყურსასმენები მირჩია, რაც მჭირდებოდა. ძალიან კმაყოფილი ვარ!"</p>
+                            <div class="flex items-center gap-3 pt-2">
+                                <div class="w-8 h-8 rounded-full bg-accent-violet flex items-center justify-center text-xs font-bold">ლმ</div>
+                                <div>
+                                    <h5 class="text-xs font-bold text-white">ლეპან მამალაძე</h5>
+                                    <span class="text-[10px] text-gray-500">Content Creator</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Subscription Card -->
+                <div class="glass-panel p-8 rounded-3xl border border-slate-800 text-center space-y-4 max-w-2xl mx-auto">
+                    <i class="fa-solid fa-paper-plane text-3xl text-brand-400"></i>
+                    <h3 class="text-xl font-bold text-white">გამოიწერეთ სიახლეები & მიიღეთ -10% კოდი</h3>
+                    <p class="text-xs text-gray-400">მიიღეთ ინფორმაცია ექსკლუზიურ ფასდაკლებებსა და ახალ პროდუქციაზე პირველებმა.</p>
+                    <form onsubmit="app.handleNewsletter(event)" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                        <input type="email" required placeholder="თქვენი ელ-ფოსტა..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500">
+                        <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-all">გამოწერა</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= PAGE 2: SHOP / CATALOG ================= -->
+        <div id="view-shop" class="page-view hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        სრული კატალოგი
+                        <span id="shop-count-badge" class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">0 პროდუქტი</span>
+                    </h2>
+                    <p class="text-xs text-gray-400">გამოიყენეთ ფილტრები თქვენთვის სასურველი ნივთის შესარჩევად</p>
+                </div>
+
+                <!-- Sort & View Modes -->
+                <div class="flex items-center gap-3">
+                    <select id="shop-sort-select" onchange="app.handleSortChange(this.value)" 
+                            class="bg-slate-900 border border-slate-700 text-gray-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-brand-500">
+                        <option value="popular">პოპულარობით</option>
+                        <option value="price-low">ფასი: დაბლიდან მაღლა</option>
+                        <option value="price-high">ფასი: მაღლიდან დაბლა</option>
+                        <option value="rating">რეიტინგით</option>
+                    </select>
+
+                    <div class="flex items-center bg-slate-900 rounded-xl p-1 border border-slate-800">
+                        <button id="view-grid-btn" onclick="app.setViewMode('grid')" class="p-1.5 rounded-lg text-white bg-slate-800"><i class="fa-solid fa-border-all text-xs"></i></button>
+                        <button id="view-list-btn" onclick="app.setViewMode('list')" class="p-1.5 rounded-lg text-gray-400 hover:text-white"><i class="fa-solid fa-list text-xs"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Sidebar & Main Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Filters Sidebar -->
+                <aside class="space-y-6 glass-panel p-5 rounded-2xl h-fit border border-slate-800">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-brand-400"></i> ფილტრაცია
+                        </h3>
+                        <button onclick="app.resetFilters()" class="text-[11px] text-gray-400 hover:text-brand-400 transition-colors">გასუფთავება</button>
+                    </div>
+
+                    <!-- Category List Filter -->
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">კატეგორია</label>
+                        <div id="shop-category-filters" class="space-y-1">
+                            <!-- Injected dynamic category filters -->
+                        </div>
+                    </div>
+
+                    <!-- Price Filter Slider -->
+                    <div class="space-y-3 border-t border-slate-800 pt-4">
+                        <div class="flex justify-between items-center text-xs">
+                            <label class="font-bold text-gray-400 uppercase tracking-wider text-[11px]">მაქს. ფასი</label>
+                            <span id="price-range-label" class="font-mono text-brand-400 font-bold">10,000 ₾</span>
+                        </div>
+                        <input type="range" id="price-range-input" min="100" max="10000" step="100" value="10000" 
+                               oninput="app.handlePriceFilter(this.value)" class="w-full accent-brand-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                    </div>
+
+                    <!-- Brand Filter -->
+                    <div class="space-y-2 border-t border-slate-800 pt-4">
+                        <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">ბრენდი</label>
+                        <div id="shop-brand-filters" class="space-y-1 max-h-40 overflow-y-auto pr-1">
+                            <!-- Injected dynamic brand filters -->
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Products Display Area -->
+                <main class="lg:col-span-3 space-y-6">
+                    <div id="shop-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic Product Cards injected here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="shop-empty-state" class="hidden text-center py-16 space-y-4 glass-panel rounded-3xl border border-slate-800">
+                        <i class="fa-solid fa-box-open text-4xl text-gray-600"></i>
+                        <h3 class="text-base font-bold text-white">პროდუქტი ვერ მოიძებნა</h3>
+                        <p class="text-xs text-gray-400 max-w-sm mx-auto">სცადეთ შეცვალოთ ძებნის ან ფილტრის პარამეტრები</p>
+                        <button onclick="app.resetFilters()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold">ფილტრების გასუფთავება</button>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: FLASH DEALS ================= -->
+        <div id="view-deals" class="page-view hidden space-y-8">
+            <div class="glass-panel p-8 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-brand-900/20 space-y-4 relative overflow-hidden">
+                <span class="px-3 py-1 rounded-full bg-amber-400/20 text-amber-400 text-xs font-bold uppercase tracking-wider border border-amber-400/30">
+                    <i class="fa-solid fa-bolt mr-1 animate-bounce"></i> 2026 HOT OFFERS
+                </span>
+                <h2 class="text-3xl font-black text-white">სპეციალური ფასდაკლებები</h2>
+                <p class="text-xs text-gray-300 max-w-xl">
+                    შეიძინეთ ტოპ ტექნიკა ექსკლუზიური ფასდაკლებით. აქციები განახლებადია ყოველკვირეულად.
+                </p>
+            </div>
+
+            <div id="deals-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Discounted products injected dynamically -->
+            </div>
+        </div>
+
+        <!-- ================= PAGE 4: ABOUT US ================= -->
+        <div id="view-about" class="page-view hidden space-y-12">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">ჩვენი ისტორია & მისია</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white">ტექნოლოგიური მომავლის შექმნა 2026 წლიდან</h2>
+                <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                    AuraTech წარმოადგენს ინოვაციურ პლატფორმას, რომელიც მომხმარებელს აწვდის უახლეს, მაღალტექნოლოგიურ მოწყობილობებს. ჩვენი მიზანია გავამარტივოთ წვდომა მომავლის ტექნოლოგიებთან.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-microchip"></i></div>
+                    <h3 class="font-bold text-white text-sm">ინოვაციურობა</h3>
+                    <p class="text-xs text-gray-400">მხოლოდ ლიცენზირებული და 2026 წლის უახლესი ტექნოლოგიები.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-accent-cyan/10 text-accent-cyan flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-robot"></i></div>
+                    <h3 class="font-bold text-white text-sm">AI ასისტენტი</h3>
+                    <p class="text-xs text-gray-400">ინტელექტუალური Nova AI დაგეხმარებათ სწორი არჩევანის გაკეთებაში.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-slate-800 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-accent-violet/10 text-accent-violet flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <h3 class="font-bold text-white text-sm">მომხმარებელზე ზრუნვა</h3>
+                    <p class="text-xs text-gray-400">24/7 მხარდაჭერა და 2 წლიანი სრული ოფიციალური გარანტია.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 5: CONTACT ================= -->
+        <div id="view-contact" class="page-view hidden space-y-8">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-bold text-white">დაგვიკავშირდით</h2>
+                <p class="text-xs text-gray-400">ჩვენი გუნდი მზადაა უპასუხოს ნებისმიერ შეკითხვას 24/7</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Contact Info -->
+                <div class="space-y-4">
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">მისამართი</h4>
+                            <p class="text-[11px] text-gray-400">თბილისი, ი. ჭავჭავაძის გამზ. #37</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-cyan/10 text-accent-cyan flex items-center justify-center"><i class="fa-solid fa-phone"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">ტელეფონი</h4>
+                            <p class="text-[11px] text-gray-400">+995 (32) 2 900 000</p>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-accent-emerald/10 text-accent-emerald flex items-center justify-center"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">ელ-ფოსტა</h4>
+                            <p class="text-[11px] text-gray-400">support@auratech2026.ge</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Contact Form -->
+                <div class="lg:col-span-2 glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
+                    <h3 class="text-sm font-bold text-white">გამოგვიგზავნეთ შეტყობინება</h3>
+                    <form onsubmit="app.handleContactSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" required placeholder="თქვენი სახელი" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                            <input type="email" required placeholder="ელ-ფოსტა" class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                        <input type="text" required placeholder="თემა" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                        <textarea rows="4" required placeholder="თქვენი შეტყობინება..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500"></textarea>
+                        <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs shadow-glow-brand transition-all">გაგზავნა</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= FLOATING AI ASSISTANT WIDGET (NOVA AI) ================= -->
+    <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-50">
+        <button id="ai-chat-btn" onclick="app.toggleAiChat()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-600 via-accent-violet to-accent-cyan text-white shadow-2xl flex items-center justify-center text-xl hover:scale-110 transition-transform ai-pulse relative">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-slate-950"></span>
+        </button>
+
+        <div id="ai-chat-box" class="hidden absolute bottom-18 right-0 w-80 sm:w-96 bg-slate-950 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[500px]">
+            <div class="p-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-cyan flex items-center justify-center text-white text-sm">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Nova AI ასისტენტი</h4>
+                        <span class="text-[9px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ონლაინ რეჟიმში</span>
+                    </div>
+                </div>
+                <button onclick="app.toggleAiChat()" class="text-gray-400 hover:text-white p-1 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="ai-messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+                <div class="flex gap-2.5 items-start">
+                    <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs flex-shrink-0">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800/80 p-3 rounded-2xl rounded-tl-none text-gray-200 leading-relaxed max-w-[85%]">
+                        გამარჯობა! 🖐️ მე ვარ <strong>Nova AI</strong>. როგორ შემიძლია დაგეხმაროთ დღეს?
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-3 py-2 bg-slate-900/60 border-t border-slate-800/60 flex items-center gap-1.5 overflow-x-auto text-[10px]">
+                <button onclick="app.sendAiQuickPrompt('საუკეთესო ფასდაკლებები')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-brand-400 rounded-full whitespace-nowrap">🔥 ფასდაკლებები</button>
+                <button onclick="app.sendAiQuickPrompt('რეკომენდაცია ნოუთბუქებზე')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-accent-cyan rounded-full whitespace-nowrap">💻 ნოუთბუქები</button>
+                <button onclick="app.sendAiQuickPrompt('როგორ შევუკვეთო?')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-gray-300 rounded-full whitespace-nowrap">❓ შეკვეთა</button>
+            </div>
+
+            <form onsubmit="app.handleAiSubmit(event)" class="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
+                <input type="text" id="ai-chat-input" placeholder="ჰკითხე Nova AI-ს..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                <button type="submit" class="w-9 h-9 rounded-xl bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= SLIDE-OUT CART DRAWER ================= -->
+    <div id="cart-drawer-overlay" onclick="app.toggleCartDrawer()" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 transition-opacity"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bag-shopping text-brand-500 text-xl"></i>
+                <h3 class="font-bold text-white text-lg">თქვენი კალათა</h3>
+            </div>
+            <button onclick="app.toggleCartDrawer()" class="text-gray-400 hover:text-white p-2 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="p-4 bg-slate-900/60 border-b border-slate-800 space-y-2">
+            <div class="flex justify-between text-xs">
+                <span id="shipping-progress-text" class="text-gray-300">დაამატეთ კიდევ 500 ₾ უფასო მიწოდებისთვის</span>
+                <span id="shipping-progress-percent" class="font-bold text-brand-400">0%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="shipping-progress-bar" class="h-full bg-gradient-to-r from-brand-500 to-accent-cyan w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-4">
+            <!-- Dynamic Cart Items -->
+        </div>
+
+        <div class="p-5 border-t border-slate-800 bg-slate-900/80 space-y-4">
+            <div class="flex gap-2">
+                <input type="text" id="promo-input" placeholder="პრომო კოდი (AURA20)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase focus:outline-none focus:border-brand-500">
+                <button onclick="app.applyPromoCode()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold">გააქტიურება</button>
+            </div>
+
+            <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between text-gray-400">
+                    <span>ჯამური ღირებულება:</span>
+                    <span id="cart-subtotal" class="font-mono text-white">0.00 ₾</span>
+                </div>
+                <div class="flex justify-between text-gray-400">
+                    <span>ფასდაკლება:</span>
+                    <span id="cart-discount" class="font-mono text-emerald-400">-0.00 ₾</span>
+                </div>
+                <div class="flex justify-between text-gray-400">
+                    <span>მიწოდება:</span>
+                    <span id="cart-shipping" class="font-mono text-white">0.00 ₾</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-white border-t border-slate-800 pt-2">
+                    <span>საბოლოო ფასი:</span>
+                    <span id="cart-total" class="font-mono text-brand-400">0.00 ₾</span>
+                </div>
+            </div>
+
+            <button onclick="app.openCheckoutModal()" class="w-full py-3.5 bg-gradient-to-r from-brand-600 to-accent-cyan text-white font-bold rounded-xl shadow-glow-brand hover:brightness-110 transition-all text-xs flex items-center justify-center gap-2">
+                <i class="fa-solid fa-lock"></i> შეკვეთის გაფორმება
+            </button>
+        </div>
+    </div>
+
+    <!-- MULTI-STEP CHECKOUT MODAL -->
+    <div id="checkout-modal-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl max-w-xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+            <button onclick="app.closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-bold text-white">შეკვეთის გაფორმება</h3>
+                <div class="flex items-center gap-2 text-xs font-semibold">
+                    <span id="step-ind-1" class="px-3 py-1 rounded-full bg-brand-600 text-white">1. მისამართი</span>
+                    <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                    <span id="step-ind-2" class="px-3 py-1 rounded-full bg-slate-800 text-gray-400">2. გადახდა</span>
+                </div>
+            </div>
+
+            <div id="checkout-step-1" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="სახელი" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                    <input type="text" placeholder="გვარი" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                </div>
+                <input type="tel" placeholder="ტელეფონის ნომერი (+995...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                <input type="text" placeholder="მიწოდების მისამართი" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                <button onclick="app.goToCheckoutStep(2)" class="w-full py-3 bg-brand-600 text-white font-bold rounded-xl text-xs">გადახდაზე გადასვლა</button>
+            </div>
+
+            <div id="checkout-step-2" class="hidden space-y-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-400">გადახდის მეთოდი</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="p-3 border border-brand-500 bg-brand-500/10 rounded-xl flex items-center gap-2 cursor-pointer text-xs font-bold text-white">
+                            <input type="radio" name="pay" checked> საბანკო ბარათი
+                        </label>
+                        <label class="p-3 border border-slate-700 bg-slate-900 rounded-xl flex items-center gap-2 cursor-pointer text-xs font-bold text-white">
+                            <input type="radio" name="pay"> კურიერთან გადახდა
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <input type="text" placeholder="4532 •••• •••• 8921" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-mono">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" placeholder="MM/YY" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-mono">
+                        <input type="password" placeholder="CVV" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-mono">
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="app.goToCheckoutStep(1)" class="w-1/3 py-3 bg-slate-800 text-gray-300 font-bold rounded-xl text-xs">უკან</button>
+                    <button onclick="app.processOrder()" class="w-2/3 py-3 bg-accent-emerald hover:bg-emerald-600 text-white font-bold rounded-xl text-xs">დადასტურება & გადახდა</button>
+                </div>
+            </div>
+
+            <div id="checkout-step-success" class="hidden text-center py-8 space-y-4">
+                <i class="fa-solid fa-circle-check text-5xl text-emerald-400"></i>
+                <h3 class="text-xl font-black text-white">შეკვეთა მიღებულია!</h3>
+                <p class="text-xs text-gray-400">შეკვეთის ID: <span id="checkout-order-id" class="font-mono text-brand-400 font-bold"></span></p>
+                <button onclick="app.closeCheckoutModal()" class="px-6 py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold">დახურვა</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK VIEW PRODUCT MODAL -->
+    <div id="quick-view-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-950 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl">
+            <button onclick="app.closeQuickView()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="quick-view-content" class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center">
+                <!-- Dynamic Quick View content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= APPLICATION LOGIC & JS ================= -->
+    <script>
+        const STORE_PRODUCTS = [
+            {
+                id: 'prod-1',
+                name: 'AuraBook Pro X Quantum 16"',
+                category: 'Electronics',
+                brand: 'Aura',
+                price: 4299,
+                originalPrice: 4899,
+                rating: 4.9,
+                inStock: true,
+                badge: 'BESTSELLER',
+                isFeatured: true,
+                isDeal: true,
+                image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80',
+                description: '2026 წლის ფლაგმანი M4-Quantum ჩიპით, 64GB RAM-ითა და OLED 240Hz ეკრანით.'
+            },
+            {
+                id: 'prod-2',
+                name: 'NeuralVision VR/AR Spatial Glass',
+                category: 'VR/AR Technology',
+                brand: 'NeuralTech',
+                price: 2899,
+                originalPrice: 3200,
+                rating: 4.8,
+                inStock: true,
+                badge: 'NEW 2026',
+                isFeatured: true,
+                isDeal: false,
+                image: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80',
+                description: 'ავტონომიური 8K სივრცობრივი ვირტუალური რეალობის სათვალე ნეირო-მართვით.'
+            },
+            {
+                id: 'prod-3',
+                name: 'CyberWatch Ultra Cellular 2026',
+                category: 'Wearables',
+                brand: 'Aura',
+                price: 1199,
+                originalPrice: 1499,
+                rating: 4.7,
+                inStock: true,
+                badge: 'HOT OFFER',
+                isFeatured: true,
+                isDeal: true,
+                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
+                description: 'ტიტანის კორპუსი, 7 დღიანი ელემენტი, ჯანმრთელობის უწყვეტი მონიტორინგი.'
+            },
+            {
+                id: 'prod-4',
+                name: 'AuraBuds Pro Spatial Audio',
+                category: 'Audio',
+                brand: 'Aura',
+                price: 549,
+                originalPrice: 650,
+                rating: 4.6,
+                inStock: true,
+                badge: 'AUDIO TOP',
+                isFeatured: false,
+                isDeal: true,
+                image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=800&q=80',
+                description: 'აქტიური ხმაურის ჩახშობა (ANC Gen 4) და Lossless Audio სტრიმინგი.'
+            },
+            {
+                id: 'prod-5',
+                name: 'Apex Robotics AI Drone X4',
+                category: 'Gaming',
+                brand: 'Apex',
+                price: 1899,
+                originalPrice: 2100,
+                rating: 4.8,
+                inStock: true,
+                badge: 'AI POWERED',
+                isFeatured: true,
+                isDeal: false,
+                image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
+                description: '8K 60fps კამერა, ავტონომიური დაბრკოლებების არიდების AI სისტემა.'
+            },
+            {
+                id: 'prod-6',
+                name: 'SmartHome Core Hub Gen 3',
+                category: 'Smart Home',
+                brand: 'Aura',
+                price: 399,
+                originalPrice: 499,
+                rating: 4.5,
+                inStock: true,
+                badge: 'SMART',
+                isFeatured: false,
+                isDeal: true,
+                image: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80',
+                description: 'ჭკვიანი სახლის ცენტრალური ჰაბი Matter და Zigbee 2026 მხარდაჭერით.'
+            }
+        ];
+
+        class AppState {
+            constructor() {
+                this.products = STORE_PRODUCTS;
+                this.cart = JSON.parse(localStorage.getItem('auratech_cart_v3') || '[]');
+                this.wishlist = JSON.parse(localStorage.getItem('auratech_wish_v3') || '[]');
+                this.appliedDiscount = 0;
+                this.activeCategory = 'All';
+                this.selectedBrand = 'All';
+                this.maxPrice = 10000;
+                this.sortBy = 'popular';
+                this.viewMode = 'grid';
+                this.currentView = 'home';
+            }
+
+            saveCart() { localStorage.setItem('auratech_cart_v3', JSON.stringify(this.cart)); }
+            saveWishlist() { localStorage.setItem('auratech_wish_v3', JSON.stringify(this.wishlist)); }
+        }
+
+        class Application {
+            constructor() {
+                this.state = new AppState();
+            }
+
+            init() {
+                this.renderFeaturedProducts('all');
+                this.renderShopProducts();
+                this.renderDealsProducts();
+                this.renderShopCategories();
+                this.renderShopBrands();
+                this.updateCartUI();
+                this.updateWishlistUI();
+            }
+
+            /* ================= TOAST SYSTEM ================= */
+            showToast(msg, type = 'info') {
+                const container = document.getElementById('toast-container');
+                if (!container) return;
+                const toast = document.createElement('div');
+                const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-brand-600';
+                
+                toast.className = `${bg} text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between text-xs font-semibold pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300`;
+                toast.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i>
+                        <span>${msg}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="ml-4 opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                container.appendChild(toast);
+
+                setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            /* ================= SPA ROUTING & TRANSITIONS ================= */
+            navigateTo(viewId) {
+                const currentViewEl = document.getElementById(`view-${this.state.currentView}`);
+                const nextViewEl = document.getElementById(`view-${viewId}`);
+
+                if (!nextViewEl || this.state.currentView === viewId) return;
+
+                ['home', 'shop', 'deals', 'about', 'contact'].forEach(v => {
+                    const btn = document.getElementById(`nav-${v}`);
+                    if (btn) {
+                        btn.className = (v === viewId)
+                            ? "px-3.5 py-2 rounded-xl text-white bg-white/10 transition-all"
+                            : "px-3.5 py-2 rounded-xl hover:bg-white/5 hover:text-white transition-all text-gray-400";
+                    }
+                });
+
+                if (currentViewEl) {
+                    currentViewEl.classList.add('page-enter');
+                    currentViewEl.classList.remove('page-active');
+                }
+
+                setTimeout(() => {
+                    if (currentViewEl) currentViewEl.classList.add('hidden');
+                    nextViewEl.classList.remove('hidden');
+                    nextViewEl.classList.add('page-enter');
+
+                    setTimeout(() => {
+                        nextViewEl.classList.remove('page-enter');
+                        nextViewEl.classList.add('page-active');
+                        this.state.currentView = viewId;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 20);
+                }, 150);
+
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+            }
+
+            filterCategoryAndGo(catName) {
+                this.state.activeCategory = catName;
+                this.renderShopCategories();
+                this.renderShopProducts();
+                this.navigateTo('shop');
+            }
+
+            toggleMobileMenu() {
+                const el = document.getElementById('mobile-menu');
+                if (el) el.classList.toggle('hidden');
+            }
+
+            /* ================= SEARCH SYSTEM ================= */
+            handleGlobalSearch(query) {
+                const dropdown = document.getElementById('global-search-dropdown');
+                const clearBtn = document.getElementById('search-clear-btn');
+                if (!dropdown || !clearBtn) return;
+
+                if (!query.trim()) {
+                    dropdown.classList.add('hidden');
+                    clearBtn.classList.add('hidden');
+                    return;
+                }
+
+                clearBtn.classList.remove('hidden');
+                const matches = this.state.products.filter(p => 
+                    p.name.toLowerCase().includes(query.toLowerCase()) || 
+                    p.category.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (matches.length === 0) {
+                    dropdown.innerHTML = `<div class="p-4 text-xs text-gray-400 text-center">შედეგი ვერ მოიძებნა</div>`;
+                } else {
+                    dropdown.innerHTML = matches.map(p => `
+                        <div onclick="app.addToCart('${p.id}'); app.clearGlobalSearch();" class="p-3 hover:bg-slate-800 flex items-center gap-3 cursor-pointer border-b border-slate-800/60 last:border-0">
+                            <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                            <div class="flex-1">
+                                <h4 class="text-xs font-bold text-white line-clamp-1">${p.name}</h4>
+                                <span class="text-[10px] text-gray-400">${p.category}</span>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-brand-400">${p.price} ₾</span>
+                        </div>
+                    `).join('');
+                }
+                dropdown.classList.remove('hidden');
+            }
+
+            clearGlobalSearch() {
+                const input = document.getElementById('global-search-input');
+                const dropdown = document.getElementById('global-search-dropdown');
+                const clearBtn = document.getElementById('search-clear-btn');
+                if (input) input.value = '';
+                if (dropdown) dropdown.classList.add('hidden');
+                if (clearBtn) clearBtn.classList.add('hidden');
+            }
+
+            /* ================= RENDERING PRODUCTS & SHOP ================= */
+            createCardHTML(p) {
+                const isWishlisted = this.state.wishlist.some(i => i.id === p.id);
+                return `
+                    <div class="glass-panel rounded-3xl border border-slate-800/80 overflow-hidden group hover:border-brand-500/50 transition-all duration-300 flex flex-col justify-between">
+                        <div class="relative overflow-hidden aspect-square bg-slate-950 cursor-pointer" onclick="app.openQuickView('${p.id}')">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            ${p.badge ? `<span class="absolute top-3 left-3 bg-brand-600/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">${p.badge}</span>` : ''}
+                            <button onclick="event.stopPropagation(); app.toggleWishlist('${p.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/80 text-gray-300 hover:text-accent-rose flex items-center justify-center transition-all ${isWishlisted ? 'text-accent-rose' : ''}">
+                                <i class="fa-solid fa-heart ${isWishlisted ? 'text-accent-rose' : ''}"></i>
+                            </button>
+                        </div>
+                        <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between text-[11px] text-gray-400 mb-1">
+                                    <span>${p.brand}</span>
+                                    <span class="text-amber-400 font-bold"><i class="fa-solid fa-star text-[10px]"></i> ${p.rating}</span>
+                                </div>
+                                <h3 onclick="app.openQuickView('${p.id}')" class="font-bold text-xs sm:text-sm text-white hover:text-brand-400 transition-colors cursor-pointer">${p.name}</h3>
+                                <p class="text-[11px] text-gray-400 line-clamp-2 mt-1">${p.description}</p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+                                <div>
+                                    <span class="text-lg font-black font-mono text-white">${p.price} ₾</span>
+                                    ${p.originalPrice ? `<span class="text-[10px] text-gray-500 line-through font-mono block">${p.originalPrice} ₾</span>` : ''}
+                                </div>
+                                <button onclick="app.addToCart('${p.id}')" class="px-3.5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-glow-brand transition-all flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> დამატება
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderFeaturedProducts(filter) {
+                ['all', 'bestseller', 'new'].forEach(f => {
+                    const btn = document.getElementById(`feat-btn-${f}`);
+                    if (btn) {
+                        btn.className = (filter === f)
+                            ? 'px-3 py-1.5 rounded-xl bg-brand-600 text-white text-xs font-semibold'
+                            : 'px-3 py-1.5 rounded-xl bg-slate-800 text-gray-400 hover:text-white text-xs font-semibold';
+                    }
+                });
+
+                let list = this.state.products.filter(p => p.isFeatured);
+                if (filter === 'bestseller') list = list.filter(p => p.badge === 'BESTSELLER');
+                if (filter === 'new') list = list.filter(p => p.badge.includes('NEW'));
+
+                const el = document.getElementById('featured-products-grid');
+                if (el) el.innerHTML = list.map(p => this.createCardHTML(p)).join('');
+            }
+
+            renderDealsProducts() {
+                const deals = this.state.products.filter(p => p.isDeal);
+                const el = document.getElementById('deals-products-grid');
+                if (el) el.innerHTML = deals.map(p => this.createCardHTML(p)).join('');
+            }
+
+            renderShopCategories() {
+                const categories = ['All', ...new Set(this.state.products.map(p => p.category))];
+                const el = document.getElementById('shop-category-filters');
+                if (!el) return;
+                el.innerHTML = categories.map(cat => `
+                    <button onclick="app.setShopCategory('${cat}')" class="w-full text-left px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${this.state.activeCategory === cat ? 'bg-brand-600 text-white font-bold' : 'text-gray-400 hover:bg-slate-800'}">
+                        ${cat === 'All' ? 'ყველა კატეგორია' : cat}
+                    </button>
+                `).join('');
+            }
+
+            renderShopBrands() {
+                const brands = ['All', ...new Set(this.state.products.map(p => p.brand))];
+                const el = document.getElementById('shop-brand-filters');
+                if (!el) return;
+                el.innerHTML = brands.map(b => `
+                    <button onclick="app.setShopBrand('${b}')" class="w-full text-left px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${this.state.selectedBrand === b ? 'bg-brand-600/30 text-brand-400 font-bold' : 'text-gray-400 hover:bg-slate-800'}">
+                        ${b === 'All' ? 'ყველა ბრენდი' : b}
+                    </button>
+                `).join('');
+            }
+
+            setShopCategory(cat) {
+                this.state.activeCategory = cat;
+                this.renderShopCategories();
+                this.renderShopProducts();
+            }
+
+            setShopBrand(brand) {
+                this.state.selectedBrand = brand;
+                this.renderShopBrands();
+                this.renderShopProducts();
+            }
+
+            handlePriceFilter(val) {
+                this.state.maxPrice = Number(val);
+                const lbl = document.getElementById('price-range-label');
+                if (lbl) lbl.textContent = `${Number(val).toLocaleString()} ₾`;
+                this.renderShopProducts();
+            }
+
+            handleSortChange(val) {
+                this.state.sortBy = val;
+                this.renderShopProducts();
+            }
+
+            setViewMode(mode) {
+                this.state.viewMode = mode;
+                const gBtn = document.getElementById('view-grid-btn');
+                const lBtn = document.getElementById('view-list-btn');
+                if (gBtn) gBtn.className = mode === 'grid' ? 'p-1.5 rounded-lg text-white bg-slate-800' : 'p-1.5 rounded-lg text-gray-400 hover:text-white';
+                if (lBtn) lBtn.className = mode === 'list' ? 'p-1.5 rounded-lg text-white bg-slate-800' : 'p-1.5 rounded-lg text-gray-400 hover:text-white';
+                this.renderShopProducts();
+            }
+
+            resetFilters() {
+                this.state.activeCategory = 'All';
+                this.state.selectedBrand = 'All';
+                this.state.maxPrice = 10000;
+                const pInput = document.getElementById('price-range-input');
+                const pLabel = document.getElementById('price-range-label');
+                if (pInput) pInput.value = 10000;
+                if (pLabel) pLabel.textContent = '10,000 ₾';
+                this.renderShopCategories();
+                this.renderShopBrands();
+                this.renderShopProducts();
+            }
+
+            renderShopProducts() {
+                let list = [...this.state.products];
+
+                if (this.state.activeCategory !== 'All') list = list.filter(p => p.category === this.state.activeCategory);
+                if (this.state.selectedBrand !== 'All') list = list.filter(p => p.brand === this.state.selectedBrand);
+                list = list.filter(p => p.price <= this.state.maxPrice);
+
+                if (this.state.sortBy === 'price-low') list.sort((a,b) => a.price - b.price);
+                if (this.state.sortBy === 'price-high') list.sort((a,b) => b.price - a.price);
+                if (this.state.sortBy === 'rating') list.sort((a,b) => b.rating - a.rating);
+
+                const badge = document.getElementById('shop-count-badge');
+                if (badge) badge.textContent = `${list.length} პროდუქტი`;
+                const container = document.getElementById('shop-products-container');
+                const empty = document.getElementById('shop-empty-state');
+
+                if (list.length === 0) {
+                    if (container) container.innerHTML = '';
+                    if (empty) empty.classList.remove('hidden');
+                } else {
+                    if (empty) empty.classList.add('hidden');
+                    if (container) container.innerHTML = list.map(p => this.createCardHTML(p)).join('');
+                }
+            }
+
+            switchSpotlightTab(tab) {
+                const content = document.getElementById('spotlight-tab-content');
+                const pTab = document.getElementById('spottab-perf');
+                const dTab = document.getElementById('spottab-display');
+                const bTab = document.getElementById('spottab-battery');
+
+                if (pTab) pTab.className = tab === 'perf' ? 'text-xs font-bold text-brand-400 border-b-2 border-brand-500 pb-1' : 'text-xs font-bold text-gray-500 hover:text-white pb-1';
+                if (dTab) dTab.className = tab === 'display' ? 'text-xs font-bold text-brand-400 border-b-2 border-brand-500 pb-1' : 'text-xs font-bold text-gray-500 hover:text-white pb-1';
+                if (bTab) bTab.className = tab === 'battery' ? 'text-xs font-bold text-brand-400 border-b-2 border-brand-500 pb-1' : 'text-xs font-bold text-gray-500 hover:text-white pb-1';
+
+                if (!content) return;
+                if (tab === 'perf') content.innerHTML = `• Quantum M5 AI Chipset (128 Tops NPU)<br>• 32GB LPDDR6 Memory<br>• Liquid Cooling System Gen 3`;
+                if (tab === 'display') content.innerHTML = `• 13.4" Holographic Micro-OLED<br>• 4K Ultra Resolution per Eye<br>• 1000 nits Peak Brightness`;
+                if (tab === 'battery') content.innerHTML = `• 14,000 mAh Graphene Battery<br>• 120W Ultra Fast Charge (0-80% in 15min)<br>• 18 Hours Active Use`;
+            }
+
+            /* ================= QUICK VIEW MODAL ================= */
+            openQuickView(id) {
+                const p = this.state.products.find(item => item.id === id);
+                if (!p) return;
+                const content = document.getElementById('quick-view-content');
+                const overlay = document.getElementById('quick-view-overlay');
+
+                content.innerHTML = `
+                    <div class="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
+                        <img src="${p.image}" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="space-y-4">
+                        <span class="text-xs text-brand-400 font-bold uppercase tracking-wider">${p.category}</span>
+                        <h3 class="text-xl font-bold text-white">${p.name}</h3>
+                        <p class="text-xs text-gray-300 leading-relaxed">${p.description}</p>
+                        <div class="text-2xl font-black font-mono text-white">${p.price} ₾</div>
+                        <button onclick="app.addToCart('${p.id}'); app.closeQuickView();" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> კალათაში დამატება
+                        </button>
+                    </div>
+                `;
+                overlay.classList.remove('hidden');
+            }
+
+            closeQuickView() {
+                const overlay = document.getElementById('quick-view-overlay');
+                if (overlay) overlay.classList.add('hidden');
+            }
+
+            /* ================= CART & WISHLIST DRAWER LOGIC ================= */
+            addToCart(id) {
+                const product = this.state.products.find(p => p.id === id);
+                if (!product) return;
+
+                const existing = this.state.cart.find(i => i.id === id);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    this.state.cart.push({ ...product, quantity: 1 });
+                }
+
+                this.state.saveCart();
+                this.updateCartUI();
+                this.showToast(`'${product.name}' დაემატა კალათაში`, 'success');
+            }
+
+            updateCartQty(id, delta) {
+                const item = this.state.cart.find(i => i.id === id);
+                if (!item) return;
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    this.state.cart = this.state.cart.filter(i => i.id !== id);
+                }
+                this.state.saveCart();
+                this.updateCartUI();
+            }
+
+            removeFromCart(id) {
+                this.state.cart = this.state.cart.filter(i => i.id !== id);
+                this.state.saveCart();
+                this.updateCartUI();
+                this.showToast('ნივთი ამოიშალა კალათიდან', 'info');
+            }
+
+            applyPromoCode() {
+                const input = document.getElementById('promo-input');
+                if (!input) return;
+                const val = input.value.trim().toUpperCase();
+                if (val === 'AURA20' || val === 'SAVE20') {
+                    this.state.appliedDiscount = 20;
+                    this.showToast('პრომო კოდი გააქტიურდა (-20%)', 'success');
+                } else {
+                    this.showToast('არასწორი პრომო კოდი', 'error');
+                }
+                this.updateCartUI();
+            }
+
+            updateCartUI() {
+                const totalItems = this.state.cart.reduce((s, i) => s + i.quantity, 0);
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.textContent = totalItems;
+
+                const container = document.getElementById('cart-items-container');
+                if (container) {
+                    if (this.state.cart.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-12 space-y-2">
+                                <i class="fa-solid fa-basket-shopping text-3xl text-gray-600"></i>
+                                <p class="text-xs text-gray-400">კალათა ცარიელია</p>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = this.state.cart.map(item => `
+                            <div class="flex items-center gap-3 p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                                <img src="${item.image}" class="w-12 h-12 rounded-xl object-cover">
+                                <div class="flex-1">
+                                    <h4 class="text-xs font-bold text-white line-clamp-1">${item.name}</h4>
+                                    <span class="text-xs font-mono font-bold text-brand-400">${item.price} ₾</span>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <button onclick="app.updateCartQty('${item.id}', -1)" class="w-5 h-5 bg-slate-800 text-gray-300 rounded flex items-center justify-center text-xs">-</button>
+                                        <span class="text-xs font-bold text-white">${item.quantity}</span>
+                                        <button onclick="app.updateCartQty('${item.id}', 1)" class="w-5 h-5 bg-slate-800 text-gray-300 rounded flex items-center justify-center text-xs">+</button>
+                                    </div>
+                                </div>
+                                <button onclick="app.removeFromCart('${item.id}')" class="text-gray-500 hover:text-rose-500 p-2 text-xs"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                const subtotal = this.state.cart.reduce((s, i) => s + (i.price * i.quantity), 0);
+                const discount = (subtotal * this.state.appliedDiscount) / 100;
+                const shipping = subtotal >= 500 || subtotal === 0 ? 0 : 15;
+                const total = subtotal - discount + shipping;
+
+                const subEl = document.getElementById('cart-subtotal');
+                const discEl = document.getElementById('cart-discount');
+                const shipEl = document.getElementById('cart-shipping');
+                const totEl = document.getElementById('cart-total');
+
+                if (subEl) subEl.textContent = `${subtotal.toFixed(2)} ₾`;
+                if (discEl) discEl.textContent = `-${discount.toFixed(2)} ₾`;
+                if (shipEl) shipEl.textContent = `${shipping.toFixed(2)} ₾`;
+                if (totEl) totEl.textContent = `${total.toFixed(2)} ₾`;
+
+                const progress = Math.min(100, (subtotal / 500) * 100);
+                const progressBar = document.getElementById('shipping-progress-bar');
+                const progressPercent = document.getElementById('shipping-progress-percent');
+
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressPercent) progressPercent.textContent = `${Math.round(progress)}%`;
+            }
+
+            toggleCartDrawer() {
+                const drawer = document.getElementById('cart-drawer');
+                const overlay = document.getElementById('cart-drawer-overlay');
+                if (drawer) drawer.classList.toggle('translate-x-full');
+                if (overlay) overlay.classList.toggle('hidden');
+            }
+
+            toggleWishlist(id) {
+                const idx = this.state.wishlist.findIndex(i => i.id === id);
+                const p = this.state.products.find(item => item.id === id);
+
+                if (idx > -1) {
+                    this.state.wishlist.splice(idx, 1);
+                    this.showToast('ამოიშალა სურვილების სიიდან', 'info');
+                } else {
+                    if (p) this.state.wishlist.push(p);
+                    this.showToast('დაემატა სურვილების სიაში', 'success');
+                }
+
+                this.state.saveWishlist();
+                this.updateWishlistUI();
+                this.renderFeaturedProducts('all');
+                this.renderShopProducts();
+            }
+
+            updateWishlistUI() {
+                const badge = document.getElementById('wishlist-badge');
+                if (!badge) return;
+                badge.textContent = this.state.wishlist.length;
+                if (this.state.wishlist.length > 0) badge.classList.remove('scale-0');
+                else badge.classList.add('scale-0');
+            }
+
+            showWishlistModal() {
+                this.showToast(`სურვილების სიაშია ${this.state.wishlist.length} ნივთი`, 'info');
+            }
+
+            /* ================= CHECKOUT MODAL ================= */
+            openCheckoutModal() {
+                if (this.state.cart.length === 0) {
+                    this.showToast('კალათა ცარიელია!', 'error');
+                    return;
+                }
+                this.toggleCartDrawer();
+                const overlay = document.getElementById('checkout-modal-overlay');
+                if (overlay) overlay.classList.remove('hidden');
+                this.goToCheckoutStep(1);
+            }
+
+            closeCheckoutModal() {
+                const overlay = document.getElementById('checkout-modal-overlay');
+                if (overlay) overlay.classList.add('hidden');
+            }
+
+            goToCheckoutStep(step) {
+                const s1 = document.getElementById('checkout-step-1');
+                const s2 = document.getElementById('checkout-step-2');
+                const succ = document.getElementById('checkout-step-success');
+                const i1 = document.getElementById('step-ind-1');
+                const i2 = document.getElementById('step-ind-2');
+
+                if (step === 1) {
+                    if (s1) s1.classList.remove('hidden');
+                    if (s2) s2.classList.add('hidden');
+                    if (succ) succ.classList.add('hidden');
+                    if (i1) i1.className = "px-3 py-1 rounded-full bg-brand-600 text-white";
+                    if (i2) i2.className = "px-3 py-1 rounded-full bg-slate-800 text-gray-400";
+                } else {
+                    if (s1) s1.classList.add('hidden');
+                    if (s2) s2.classList.remove('hidden');
+                    if (succ) succ.classList.add('hidden');
+                    if (i2) i2.className = "px-3 py-1 rounded-full bg-brand-600 text-white";
+                }
+            }
+
+            processOrder() {
+                const orderId = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+                this.state.cart = [];
+                this.state.saveCart();
+                this.updateCartUI();
+
+                const s2 = document.getElementById('checkout-step-2');
+                const succ = document.getElementById('checkout-step-success');
+                const orderIdEl = document.getElementById('checkout-order-id');
+
+                if (s2) s2.classList.add('hidden');
+                if (succ) succ.classList.remove('hidden');
+                if (orderIdEl) orderIdEl.textContent = `#${orderId}`;
+            }
+
+            /* ================= AI CHATBOT LOGIC (NOVA AI) ================= */
+            toggleAiChat() {
+                const box = document.getElementById('ai-chat-box');
+                if (box) box.classList.toggle('hidden');
+            }
+
+            openAiChatWithQuery(query) {
+                const box = document.getElementById('ai-chat-box');
+                if (box) box.classList.remove('hidden');
+                this.sendAiMessage(query);
+            }
+
+            sendAiQuickPrompt(promptText) {
+                this.sendAiMessage(promptText);
+            }
+
+            handleAiSubmit(e) {
+                e.preventDefault();
+                const input = document.getElementById('ai-chat-input');
+                if (!input) return;
+                const msg = input.value.trim();
+                if (!msg) return;
+                input.value = '';
+                this.sendAiMessage(msg);
+            }
+
+            sendAiMessage(userText) {
+                const container = document.getElementById('ai-messages-container');
+                if (!container) return;
+                
+                const userBubble = document.createElement('div');
+                userBubble.className = "flex gap-2.5 justify-end items-start";
+                userBubble.innerHTML = `
+                    <div class="bg-brand-600 text-white p-3 rounded-2xl rounded-tr-none text-xs leading-relaxed max-w-[85%]">
+                        ${userText}
+                    </div>
+                `;
+                container.appendChild(userBubble);
+
+                setTimeout(() => {
+                    let response = "მადლობა შეკითხვისთვის! AuraTech 2026-ის AI ასისტენტი მზადაა დაგეხმაროთ.";
+                    const lower = userText.toLowerCase();
+
+                    if (lower.includes('ფასდაკლებ') || lower.includes('აქცი')) {
+                        response = "🔥 ამჟამად მოქმედებს -20% ფასდაკლება პრომო კოდით <strong>AURA20</strong>. ასევე იხილეთ ჩვენი ფასდაკლებების სექცია კატალოგში!";
+                    } else if (lower.includes('ნოუთბუქ') || lower.includes('ლეპტოპ')) {
+                        response = "💻 2026 წლის საუკეთესო მოდელია <strong>AuraBook Pro X Quantum 16\"</strong> (4,299 ₾). მას აქვს M4 ჩიპი და 64GB RAM!";
+                    } else if (lower.includes('შევუკვეთო') || lower.includes('ყიდვა')) {
+                        response = "🛒 შეკვეთისთვის დაამატეთ სასურველი ნივთი კალათაში, დააჭირეთ 'შეკვეთის გაფორმებას' და მიჰყევით 2 მარტივ ნაბიჯს!";
+                    }
+
+                    const aiBubble = document.createElement('div');
+                    aiBubble.className = "flex gap-2.5 items-start";
+                    aiBubble.innerHTML = `
+                        <div class="w-7 h-7 rounded-lg bg-brand-600 text-white flex items-center justify-center text-xs flex-shrink-0">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl rounded-tl-none text-gray-200 leading-relaxed max-w-[85%]">
+                            ${response}
+                        </div>
+                    `;
+                    container.appendChild(aiBubble);
+                    container.scrollTop = container.scrollHeight;
+                }, 600);
+
+                container.scrollTop = container.scrollHeight;
+            }
+
+            handleNewsletter(e) {
+                e.preventDefault();
+                this.showToast('გმადლობთ გამოწერისთვის! პრომო კოდი გამოგზავნილია ელ-ფოსტაზე.', 'success');
+                e.target.reset();
+            }
+
+            handleContactSubmit(e) {
+                e.preventDefault();
+                this.showToast('შეტყობინება წარმატებით გაიგზავნა! ოპერატორი მალე დაგიკავშირდებათ.', 'success');
+                e.target.reset();
+            }
+        }
+
+        // Safe Initialization
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new Application();
+            app.init();
+        });
+    </script>
+</body>
+</html>
